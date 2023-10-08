@@ -4,6 +4,8 @@ package com.example.echonosenserest.models;
 public class User {
 
     private int userId;
+    private String fname;
+    private String lName;
     private String email;
     private String password; // Always handle passwords securely (hashing + salting)
     private String role;
@@ -13,28 +15,43 @@ public class User {
     public User() {
     }
 
-    public User(int userId, String email, String password, String role) {
+    public User(int userId, String fname, String lName, String email, String password, String role, String status) {
         this.userId = userId;
-        this.email = email;
-        this.password = password;
-        this.role = role;
-    }
-
-    public User(int userId, String email, String password, String role, String status) {
-        this.userId = userId;
+        this.fname = fname;
+        this.lName = lName;
         this.email = email;
         this.password = password;
         this.role = role;
         this.status = status;
     }
 
-    // Getters and Setters
+    public User(String email, String password) {
+        this.email = email;
+        this.password = password;
+    }
+
     public int getUserId() {
         return userId;
     }
 
     public void setUserId(int userId) {
         this.userId = userId;
+    }
+
+    public String getFname() {
+        return fname;
+    }
+
+    public void setFname(String fname) {
+        this.fname = fname;
+    }
+
+    public String getlName() {
+        return lName;
+    }
+
+    public void setlName(String lName) {
+        this.lName = lName;
     }
 
     public String getEmail() {

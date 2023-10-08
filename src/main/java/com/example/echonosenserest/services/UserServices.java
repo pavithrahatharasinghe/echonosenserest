@@ -1,17 +1,25 @@
 package com.example.echonosenserest.services;
 
 
+    import com.example.echonosenserest.database.UserDBUtils;
+    import com.example.echonosenserest.models.User;
+    import com.google.gson.Gson;
+    import com.google.gson.GsonBuilder;
+    import jakarta.ws.rs.*;
+    import jakarta.ws.rs.core.MediaType;
+    import jakarta.ws.rs.core.Response;
 
-import com.example.echonosenserest.database.UserDBUtils;
-import com.example.echonosenserest.models.User;
-import jakarta.ws.rs.*;
-import jakarta.ws.rs.core.MediaType;
-import jakarta.ws.rs.core.Response;
-import java.sql.SQLException;
-import java.util.List;
+    import java.sql.SQLException;
+    import java.util.List;
+
+    import java.util.logging.Logger;
+    import java.util.logging.Level;
 
 @Path("/users")
 public class UserServices {
+
+    private static final Logger LOGGER = Logger.getLogger(UserServices.class.getName());
+
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
@@ -68,4 +76,26 @@ public class UserServices {
         }
         return Response.status(Response.Status.BAD_REQUEST).entity("Error changing user status").build();
     }
+
+    @POST
+    @Path("/login")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response userLogin(User user) throws SQLException {
+
+        // Log the email (Avoid logging passwords, even in development environments!)
+        LOGGER.log(Level.INFO, "Attempting login with Email: {0}", user.getEmail());
+
+        String userRole = UserDBUtils.userLogin(user.getEmail(), user.getPassword());
+        if (userRole != null) {
+            // Return success response with the user role
+            return Response.ok().entity(userRole).build();
+        } else {
+            // Return error response
+            return Response.status(Response.Status.UNAUTHORIZED).entity("Invalid credentials").build();
+        }
+    }
+
+
+
 }

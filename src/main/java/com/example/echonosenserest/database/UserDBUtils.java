@@ -29,9 +29,12 @@ public class UserDBUtils {
         while (resultSet.next()) {
             User user = new User(
                     resultSet.getInt("UserID"),
+                    resultSet.getString("firstName"),
+                    resultSet.getString("lastName"),
                     resultSet.getString("Email"),
                     resultSet.getString("Password"), // In a real-world scenario, avoid fetching the password.
-                    resultSet.getString("Role")
+                    resultSet.getString("Role"),
+                    resultSet.getString("status")
             );
             users.add(user);
         }
@@ -46,9 +49,12 @@ public class UserDBUtils {
         if (resultSet.next()) {
             return new User(
                     resultSet.getInt("UserID"),
+                    resultSet.getString("firstName"),
+                    resultSet.getString("lastName"),
                     resultSet.getString("Email"),
                     resultSet.getString("Password"), // Avoid this in real scenarios.
-                    resultSet.getString("Role")
+                    resultSet.getString("Role"),
+                    resultSet.getString("status")
             );
         }
         return null;
@@ -56,20 +62,25 @@ public class UserDBUtils {
 
     // Add user
     public static boolean addUser(User user) throws SQLException {
-        PreparedStatement statement = connection.prepareStatement("INSERT INTO Users (Email, Password, Role) VALUES (?, ?, ?)");
-        statement.setString(1, user.getEmail());
-        statement.setString(2, user.getPassword());
-        statement.setString(3, user.getRole());
+        PreparedStatement statement = connection.prepareStatement("INSERT INTO Users (firstName, lastName, Email, Password, Role, status) VALUES (?, ?, ?, ?, ?, ?)");
+        statement.setString(1, user.getFname());
+        statement.setString(2, user.getlName());
+        statement.setString(3, user.getEmail());
+        statement.setString(4, user.getPassword());
+        statement.setString(5, user.getRole());
+        statement.setString(6, "Active");
         return statement.executeUpdate() > 0;
     }
 
     // Update user
     public static boolean updateUser(User user) throws SQLException {
-        PreparedStatement statement = connection.prepareStatement("UPDATE Users SET Email = ?, Password = ?, Role = ? WHERE UserID = ?");
-        statement.setString(1, user.getEmail());
-        statement.setString(2, user.getPassword());
-        statement.setString(3, user.getRole());
-        statement.setInt(4, user.getUserId());
+        PreparedStatement statement = connection.prepareStatement("UPDATE Users SET firstName = ? , lastName = ?, Email = ?, Password = ?, Role = ? WHERE UserID = ?");
+        statement.setString(1, user.getFname());
+        statement.setString(2, user.getlName());
+        statement.setString(3, user.getEmail());
+        statement.setString(4, user.getPassword());
+        statement.setString(5, user.getRole());
+        statement.setInt(6, user.getUserId());
         return statement.executeUpdate() > 0;
     }
 
@@ -87,4 +98,19 @@ public class UserDBUtils {
         statement.setInt(2, userId);
         return statement.executeUpdate() > 0;
     }
+
+
+    public static String userLogin(String email, String password) throws SQLException {
+        String query = "SELECT Role FROM Users WHERE Email = ? AND Password = ?";
+        PreparedStatement statement = connection.prepareStatement(query);
+        statement.setString(1, email);
+        statement.setString(2, password);
+
+        ResultSet resultSet = statement.executeQuery();
+        if (resultSet.next()) {
+            return resultSet.getString("Role");
+        }
+        return null;
+    }
+
 }
