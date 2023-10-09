@@ -66,5 +66,23 @@ public class SubscriptionDBUtils {
         return rowsDeleted > 0;
     }
 
+    public static Subscription getSubscriptionPlanById(int subscriptionPlanId) throws SQLException {
+        PreparedStatement statement = connection.prepareStatement("SELECT * FROM Subscriptions WHERE SubscriptionID = ?");
+        statement.setInt(1, subscriptionPlanId);
+
+        ResultSet resultSet = statement.executeQuery();
+        if (resultSet.next()) {
+            int planID = resultSet.getInt("SubscriptionID");
+            String planName = resultSet.getString("PlanName");
+            String duration = resultSet.getString("Duration");
+            BigDecimal price = resultSet.getBigDecimal("Price");
+
+            return new Subscription(planID, planName, duration, price);
+        }
+
+        return null; // Return null if the plan with the specified ID is not found
+    }
+
+
     // Add methods for editing and deleting subscriptions as needed...
 }

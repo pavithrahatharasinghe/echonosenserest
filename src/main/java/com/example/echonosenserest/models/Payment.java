@@ -11,22 +11,28 @@ public class Payment {
     private Date paymentDate;
     private String paymentMethod;
     private int subscriptionID;
+    private String referenceID;
+    public Payment() {
+        // Default constructor with no arguments
+    }
 
-    public Payment(int paymentID, int userID, BigDecimal amount, Date paymentDate, String paymentMethod, int subscriptionID) {
+    public Payment(int paymentID, int userID, BigDecimal amount, Date paymentDate, String paymentMethod, int subscriptionID,String referenceID) {
         this.paymentID = paymentID;
         this.userID = userID;
         this.amount = amount;
         this.paymentDate = paymentDate;
         this.paymentMethod = paymentMethod;
         this.subscriptionID = subscriptionID;
+        this.referenceID = referenceID;
     }
 
-    public Payment(int userID, BigDecimal amount, Date paymentDate, String paymentMethod, int subscriptionID) {
+    public Payment(int userID, BigDecimal amount, Date paymentDate, String paymentMethod, int subscriptionID,String referenceID) {
         this.userID = userID;
         this.amount = amount;
         this.paymentDate = paymentDate;
         this.paymentMethod = paymentMethod;
         this.subscriptionID = subscriptionID;
+        this.referenceID = referenceID;
     }
 
     public int getPaymentID() {
@@ -75,5 +81,13 @@ public class Payment {
 
     public void setSubscriptionID(int subscriptionID) {
         this.subscriptionID = subscriptionID;
+    }
+
+    public String getReferenceID() {
+        return referenceID;
+    }
+
+    public void setReferenceID(String referenceID) {
+        this.referenceID = referenceID;
     }
 }

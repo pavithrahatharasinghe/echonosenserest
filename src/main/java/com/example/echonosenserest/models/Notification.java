@@ -7,14 +7,20 @@ public class Notification {
     private int userID;
     private String message;
     private Date date;
+    private Date updatedAt;
+
+    public Notification() {
+        // Default constructor
+    }
 
 
 
-    public Notification(int notificationID, int userID, String message, Date date) {
+    public Notification(int notificationID, int userID, String message, Date date, Date updatedAt) {
         this.notificationID = notificationID;
         this.userID = userID;
         this.message = message;
         this.date = date;
+        this.updatedAt = updatedAt;
     }
 
     public int getNotificationID() {
@@ -47,5 +53,13 @@ public class Notification {
 
     public void setDate(Date date) {
         this.date = date;
+    }
+
+    public Date getUpdatedAt() {
+        return updatedAt;
+    }
+
+    public void setUpdatedAt(Date updatedAt) {
+        this.updatedAt = updatedAt;
     }
 }

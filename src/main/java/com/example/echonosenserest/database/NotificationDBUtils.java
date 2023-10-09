@@ -31,8 +31,9 @@ public class NotificationDBUtils {
             int userID = resultSet.getInt("UserID");
             String message = resultSet.getString("Message");
             Date date = resultSet.getDate("Date");
+            Timestamp updatedAt = resultSet.getTimestamp("updated_at");
 
-            Notification notification = new Notification(notificationID, userID, message, date);
+            Notification notification = new Notification(notificationID, userID, message, date, updatedAt);
             notifications.add(notification);
         }
 
@@ -50,8 +51,8 @@ public class NotificationDBUtils {
             int userID = resultSet.getInt("UserID");
             String message = resultSet.getString("Message");
             Date date = resultSet.getDate("Date");
-
-            Notification notification = new Notification(notificationID, userID, message, date);
+            Timestamp updatedAt = resultSet.getTimestamp("updated_at");
+            Notification notification = new Notification(notificationID, userID, message, date,updatedAt);
             notifications.add(notification);
         }
 
@@ -59,14 +60,15 @@ public class NotificationDBUtils {
     }
 
     public static boolean addNotification(Notification notification) throws SQLException {
-        PreparedStatement statement = connection.prepareStatement("INSERT INTO Notifications (UserID, Message, Date) VALUES (?, ?, ?)");
+        PreparedStatement statement = connection.prepareStatement("INSERT INTO Notifications (UserID, Message, Date, updated_at) VALUES (?, ?, ?, ?)");
         statement.setInt(1, notification.getUserID());
         statement.setString(2, notification.getMessage());
         statement.setDate(3, new java.sql.Date(notification.getDate().getTime()));
+        statement.setTimestamp(4, new Timestamp(System.currentTimeMillis())); // Set 'updated_at' to current timestamp
 
-        int rowsInserted = statement.executeUpdate();
-        return rowsInserted > 0;
+        return statement.executeUpdate() > 0;
     }
+
 
     public static boolean updateNotification(int notificationId, Notification notification) throws SQLException {
         PreparedStatement statement = connection.prepareStatement("UPDATE Notifications SET Message = ?, Date = ? WHERE NotificationID = ?");

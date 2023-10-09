@@ -54,6 +54,24 @@ public class SubscriptionServices {
         }
     }
 
+    // Define a method to get a subscription plan by ID
+    @GET
+    @Path("/{subscriptionPlanId}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getSubscriptionPlanById(@PathParam("subscriptionPlanId") int subscriptionPlanId) throws SQLException {
+        // Replace this with your actual logic to retrieve the subscription plan from your data source
+        Subscription plan = SubscriptionDBUtils.getSubscriptionPlanById(subscriptionPlanId);
+
+        if (plan != null) {
+            // Return the plan with a 200 OK response
+            return Response.status(Response.Status.OK).entity(plan).build();
+        } else {
+            // Return a 404 Not Found response if the plan is not found
+            return Response.status(Response.Status.NOT_FOUND).build();
+        }
+    }
+
+
 
     // Add more methods for editing and deleting subscriptions as needed...
 }

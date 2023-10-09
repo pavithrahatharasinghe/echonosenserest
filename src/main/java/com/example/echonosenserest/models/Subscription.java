@@ -7,7 +7,9 @@ public class Subscription {
     private String planName;
     private String duration;
     private BigDecimal price;
-
+    public Subscription() {
+        // Default constructor
+    }
     public Subscription(int subscriptionID, String planName, String duration, BigDecimal price) {
         this.subscriptionID = subscriptionID;
         this.planName = planName;

@@ -36,8 +36,9 @@ public class PaymentDBUtils {
             Date paymentDate = resultSet.getDate("PaymentDate");
             String paymentMethod = resultSet.getString("PaymentMethod");
             int subscriptionID = resultSet.getInt("SubscriptionID");
+            String referenceID = resultSet.getString("referenceID");
 
-            Payment payment = new Payment(paymentID, userID, amount, paymentDate, paymentMethod, subscriptionID);
+            Payment payment = new Payment(paymentID, userID, amount, paymentDate, paymentMethod, subscriptionID,referenceID);
             payments.add(payment);
         }
 
@@ -45,16 +46,18 @@ public class PaymentDBUtils {
     }
 
     public static boolean addPayment(Payment payment) throws SQLException {
-        PreparedStatement statement = connection.prepareStatement("INSERT INTO Payments (UserID, Amount, PaymentDate, PaymentMethod, SubscriptionID) VALUES (?, ?, ?, ?, ?)");
+        PreparedStatement statement = connection.prepareStatement("INSERT INTO Payments (UserID, Amount, PaymentDate, PaymentMethod, SubscriptionID, referenceID) VALUES (?, ?, ?, ?, ?, ?)");
         statement.setInt(1, payment.getUserID());
         statement.setBigDecimal(2, payment.getAmount());
         statement.setDate(3, new java.sql.Date(payment.getPaymentDate().getTime()));
         statement.setString(4, payment.getPaymentMethod());
         statement.setInt(5, payment.getSubscriptionID());
+        statement.setString(6, payment.getReferenceID());
 
         int rowsInserted = statement.executeUpdate();
         return rowsInserted > 0;
     }
+
     public static Payment getPaymentByID(int paymentID) throws SQLException {
         PreparedStatement statement = connection.prepareStatement("SELECT * FROM Payments WHERE PaymentID = ?");
         statement.setInt(1, paymentID);
@@ -66,20 +69,23 @@ public class PaymentDBUtils {
             Date paymentDate = resultSet.getDate("PaymentDate");
             String paymentMethod = resultSet.getString("PaymentMethod");
             int subscriptionID = resultSet.getInt("SubscriptionID");
+            String referenceID = resultSet.getString("referenceID");
 
-            return new Payment(paymentID, userID, amount, paymentDate, paymentMethod, subscriptionID);
+            return new Payment(paymentID, userID, amount, paymentDate, paymentMethod, subscriptionID,referenceID);
         }
         return null;
     }
 
     public static boolean updatePayment(int paymentID, Payment payment) throws SQLException {
-        PreparedStatement statement = connection.prepareStatement("UPDATE Payments SET UserID = ?, Amount = ?, PaymentDate = ?, PaymentMethod = ?, SubscriptionID = ? WHERE PaymentID = ?");
+        PreparedStatement statement = connection.prepareStatement("UPDATE Payments SET UserID = ?, Amount = ?, PaymentDate = ?, PaymentMethod = ?, SubscriptionID = ?, referenceID =? WHERE PaymentID = ?");
         statement.setInt(1, payment.getUserID());
         statement.setBigDecimal(2, payment.getAmount());
         statement.setDate(3, new java.sql.Date(payment.getPaymentDate().getTime()));
         statement.setString(4, payment.getPaymentMethod());
         statement.setInt(5, payment.getSubscriptionID());
-        statement.setInt(6, paymentID);
+        statement.setString(6, payment.getReferenceID());
+        statement.setInt(7, paymentID);
+
 
         int rowsUpdated = statement.executeUpdate();
         return rowsUpdated > 0;
