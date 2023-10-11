@@ -5,7 +5,7 @@ public class Coin {
     private String name;
     private String symbol;
     private String description;
-    private double price;
+
     private String status;
     private String imageUrl;
 
@@ -13,13 +13,16 @@ public class Coin {
 
     }
 
+    public Coin(int id, String name) {
+        this.id = id;
+        this.name = name;
+    }
 
-    public Coin(int id, String name, String symbol, String description, double price, String status, String imageUrl) {
+    public Coin(int id, String name, String symbol, String description, String status, String imageUrl) {
         this.id = id;
         this.name = name;
         this.symbol = symbol;
         this.description = description;
-        this.price = price;
         this.status = status;
         this.imageUrl = imageUrl;
     }
@@ -54,14 +57,6 @@ public class Coin {
 
     public void setDescription(String description) {
         this.description = description;
-    }
-
-    public double getPrice() {
-        return price;
-    }
-
-    public void setPrice(double price) {
-        this.price = price;
     }
 
     public String getStatus() {

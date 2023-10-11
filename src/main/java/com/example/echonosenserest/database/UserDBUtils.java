@@ -3,7 +3,11 @@ package com.example.echonosenserest.database;
 
 import com.example.echonosenserest.DatabaseConnection;
 import com.example.echonosenserest.models.User;
-import java.sql.*;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -112,5 +116,73 @@ public class UserDBUtils {
         }
         return null;
     }
+
+    public static String getUserPasswordById(int userId) throws SQLException {
+        PreparedStatement statement = connection.prepareStatement("SELECT Password FROM Users WHERE UserID = ?");
+        statement.setInt(1, userId);
+        ResultSet resultSet = statement.executeQuery();
+        if (resultSet.next()) {
+            return resultSet.getString("Password");
+        }
+        return null;
+    }
+
+    public static boolean updateUserPassword(int userId, String newPassword) throws SQLException {
+        PreparedStatement statement = connection.prepareStatement("UPDATE Users SET Password = ? WHERE UserID = ?");
+        statement.setString(1, newPassword);
+        statement.setInt(2, userId);
+        return statement.executeUpdate() > 0;
+    }
+    public static String[] getUserNameById(int userId) throws SQLException {
+        PreparedStatement statement = connection.prepareStatement("SELECT firstName, lastName FROM Users WHERE UserID = ?");
+        statement.setInt(1, userId);
+        ResultSet resultSet = statement.executeQuery();
+        if (resultSet.next()) {
+            String firstName = resultSet.getString("firstName");
+            String lastName = resultSet.getString("lastName");
+            return new String[]{firstName, lastName};
+        }
+        return null;
+    }
+
+    public static boolean updateUserName(int userId, String firstName, String lastName) throws SQLException {
+        PreparedStatement statement = connection.prepareStatement("UPDATE Users SET firstName = ?, lastName = ? WHERE UserID = ?");
+        statement.setString(1, firstName);
+        statement.setString(2, lastName);
+        statement.setInt(3, userId);
+        return statement.executeUpdate() > 0;
+    }
+
+    public static int getUserIdByEmail(String email) throws SQLException {
+        PreparedStatement statement = connection.prepareStatement("SELECT UserID FROM Users WHERE Email = ?");
+        statement.setString(1, email);
+        ResultSet resultSet = statement.executeQuery();
+        if (resultSet.next()) {
+            return resultSet.getInt("UserID");
+        }
+        return -1; // Return -1 if no user with the given email is found
+    }
+    public static User getUserByEmailAndPassword(String email, String password) throws SQLException {
+        String query = "SELECT * FROM Users WHERE Email = ? AND Password = ?";
+        PreparedStatement statement = connection.prepareStatement(query);
+        statement.setString(1, email);
+        statement.setString(2, password);
+
+        ResultSet resultSet = statement.executeQuery();
+        if (resultSet.next()) {
+            return new User(
+                    resultSet.getInt("UserID"),
+                    resultSet.getString("firstName"),
+                    resultSet.getString("lastName"),
+                    resultSet.getString("Email"),
+                    resultSet.getString("Password"), // Avoid this in real scenarios.
+                    resultSet.getString("Role"),
+                    resultSet.getString("status")
+            );
+        }
+        return null;
+    }
+
+
 
 }

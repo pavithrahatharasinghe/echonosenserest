@@ -16,7 +16,7 @@ public class Payment {
         // Default constructor with no arguments
     }
 
-    public Payment(int paymentID, int userID, BigDecimal amount, Date paymentDate, String paymentMethod, int subscriptionID,String referenceID) {
+    public Payment(int paymentID, int userID, BigDecimal amount, Date paymentDate, String paymentMethod, int subscriptionID, String referenceID) {
         this.paymentID = paymentID;
         this.userID = userID;
         this.amount = amount;
@@ -26,7 +26,7 @@ public class Payment {
         this.referenceID = referenceID;
     }
 
-    public Payment(int userID, BigDecimal amount, Date paymentDate, String paymentMethod, int subscriptionID,String referenceID) {
+    public Payment(int userID, BigDecimal amount, Date paymentDate, String paymentMethod, int subscriptionID, String referenceID) {
         this.userID = userID;
         this.amount = amount;
         this.paymentDate = paymentDate;

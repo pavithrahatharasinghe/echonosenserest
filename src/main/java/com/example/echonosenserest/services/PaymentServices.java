@@ -1,12 +1,12 @@
 package com.example.echonosenserest.services;
 
 
-
-import com.example.echonosenserest.models.Payment;
 import com.example.echonosenserest.database.PaymentDBUtils;
+import com.example.echonosenserest.models.Payment;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
+
 import java.sql.SQLException;
 import java.util.List;
 

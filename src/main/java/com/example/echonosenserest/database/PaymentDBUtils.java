@@ -49,7 +49,7 @@ public class PaymentDBUtils {
         PreparedStatement statement = connection.prepareStatement("INSERT INTO Payments (UserID, Amount, PaymentDate, PaymentMethod, SubscriptionID, referenceID) VALUES (?, ?, ?, ?, ?, ?)");
         statement.setInt(1, payment.getUserID());
         statement.setBigDecimal(2, payment.getAmount());
-        statement.setDate(3, new java.sql.Date(payment.getPaymentDate().getTime()));
+        statement.setDate(3, new Date(payment.getPaymentDate().getTime()));
         statement.setString(4, payment.getPaymentMethod());
         statement.setInt(5, payment.getSubscriptionID());
         statement.setString(6, payment.getReferenceID());
@@ -80,7 +80,7 @@ public class PaymentDBUtils {
         PreparedStatement statement = connection.prepareStatement("UPDATE Payments SET UserID = ?, Amount = ?, PaymentDate = ?, PaymentMethod = ?, SubscriptionID = ?, referenceID =? WHERE PaymentID = ?");
         statement.setInt(1, payment.getUserID());
         statement.setBigDecimal(2, payment.getAmount());
-        statement.setDate(3, new java.sql.Date(payment.getPaymentDate().getTime()));
+        statement.setDate(3, new Date(payment.getPaymentDate().getTime()));
         statement.setString(4, payment.getPaymentMethod());
         statement.setInt(5, payment.getSubscriptionID());
         statement.setString(6, payment.getReferenceID());

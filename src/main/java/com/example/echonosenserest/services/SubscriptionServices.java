@@ -1,10 +1,11 @@
 package com.example.echonosenserest.services;
 
-import com.example.echonosenserest.models.Subscription;
 import com.example.echonosenserest.database.SubscriptionDBUtils;
+import com.example.echonosenserest.models.Subscription;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
+
 import java.sql.SQLException;
 import java.util.List;
 
