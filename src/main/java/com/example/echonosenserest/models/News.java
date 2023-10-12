@@ -3,18 +3,18 @@ package com.example.echonosenserest.models;
 import java.util.Date;
 
 public class News {
-    private int newsID;
+    private String newsID;
     private String title;
     private String content;
     private double polarity;
     private String impact;
     private String relatedCoin;
-    private Date dateReleased;
+    private String dateReleased;
     private String source;
 
     // Constructors, getters, setters, and other methods...
 
-    public News(int newsID, String title, String content, double polarity, String impact, String relatedCoin, Date dateReleased, String source) {
+    public News(String newsID, String title, String content, double polarity, String impact, String relatedCoin, String dateReleased, String source) {
         this.newsID = newsID;
         this.title = title;
         this.content = content;
@@ -25,11 +25,11 @@ public class News {
         this.source = source;
     }
 
-    public int getNewsID() {
+    public String getNewsID() {
         return newsID;
     }
 
-    public void setNewsID(int newsID) {
+    public void setNewsID(String newsID) {
         this.newsID = newsID;
     }
 
@@ -73,11 +73,11 @@ public class News {
         this.relatedCoin = relatedCoin;
     }
 
-    public Date getDateReleased() {
+    public String getDateReleased() {
         return dateReleased;
     }
 
-    public void setDateReleased(Date dateReleased) {
+    public void String(String dateReleased) {
         this.dateReleased = dateReleased;
     }
 

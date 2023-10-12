@@ -2,6 +2,11 @@ package com.example.echonosenserest.database;
 
 import com.example.echonosenserest.DatabaseConnection;
 import com.example.echonosenserest.models.News;
+import com.example.echonosenserest.models.NewsArticle;
+
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -25,13 +30,13 @@ public class NewsDBUtils {
         ResultSet resultSet = statement.executeQuery();
         while (resultSet.next()) {
             News news = new News(
-                    resultSet.getInt("newsID"),
+                    resultSet.getString("newsID"),
                     resultSet.getString("title"),
                     resultSet.getString("content"),
                     resultSet.getDouble("polarity"),
                     resultSet.getString("impact"),
                     resultSet.getString("relatedCoin"),
-                    resultSet.getDate("dateReleased"),
+                    resultSet.getString("dateReleased"),
                     resultSet.getString("source")
             );
             newsList.add(news);
@@ -46,13 +51,13 @@ public class NewsDBUtils {
         ResultSet resultSet = statement.executeQuery();
         while (resultSet.next()) {
             News news = new News(
-                    resultSet.getInt("newsID"),
+                    resultSet.getString("newsID"),
                     resultSet.getString("title"),
                     resultSet.getString("content"),
                     resultSet.getDouble("polarity"),
                     resultSet.getString("impact"),
                     resultSet.getString("relatedCoin"),
-                    resultSet.getDate("dateReleased"),
+                    resultSet.getString("dateReleased"),
                     resultSet.getString("source")
             );
             newsList.add(news);
@@ -67,13 +72,13 @@ public class NewsDBUtils {
         ResultSet resultSet = statement.executeQuery();
         while (resultSet.next()) {
             News news = new News(
-                    resultSet.getInt("newsID"),
+                    resultSet.getString("newsID"),
                     resultSet.getString("title"),
                     resultSet.getString("content"),
                     resultSet.getDouble("polarity"),
                     resultSet.getString("impact"),
                     resultSet.getString("relatedCoin"),
-                    resultSet.getDate("dateReleased"),
+                    resultSet.getString("dateReleased"),
                     resultSet.getString("source")
             );
             newsList.add(news);
@@ -85,20 +90,21 @@ public class NewsDBUtils {
 
     public static List<News> getNewsByCoinAndImpact(String relatedCoin, String impact) throws SQLException {
         List<News> newsList = new ArrayList<>();
-        PreparedStatement statement = connection.prepareStatement("SELECT * FROM News WHERE relatedCoin = ? AND impact = ?");
+        PreparedStatement statement = connection.prepareStatement("SELECT * FROM News WHERE ticker = ? AND impact = ?");
         statement.setString(1, relatedCoin);
         statement.setString(2, impact);
         ResultSet resultSet = statement.executeQuery();
         while (resultSet.next()) {
             News news = new News(
-                    resultSet.getInt("newsID"),
+                    resultSet.getString("id"),
                     resultSet.getString("title"),
-                    resultSet.getString("content"),
+                    resultSet.getString("description"),
                     resultSet.getDouble("polarity"),
                     resultSet.getString("impact"),
-                    resultSet.getString("relatedCoin"),
-                    resultSet.getDate("dateReleased"),
-                    resultSet.getString("source")
+                    resultSet.getString("ticker"),
+                    resultSet.getString("published_utc"),
+                    resultSet.getString("article_url")
+
             );
             newsList.add(news);
         }
@@ -108,5 +114,28 @@ public class NewsDBUtils {
 // Other methods...
 
 
-    // Add more methods as needed...
+    public static void saveNewsArticles(List<NewsArticle> articles) throws SQLException {
+        String insertSQL = "INSERT INTO News (id, ticker, title, author, published_utc, article_url, image_url, description) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+        PreparedStatement preparedStatement = connection.prepareStatement(insertSQL);
+
+        for (NewsArticle article : articles) {
+            preparedStatement.setString(1, article.getId());
+            preparedStatement.setString(2, article.getTicker());
+            preparedStatement.setString(3, article.getTitle());
+            preparedStatement.setString(4, article.getAuthor());
+
+            // Inserting the date as it is without parsing
+            preparedStatement.setString(5, article.getPublishedUtc());
+
+            preparedStatement.setString(6, article.getArticleUrl());
+            preparedStatement.setString(7, article.getImageUrl());
+            preparedStatement.setString(8, article.getDescription());
+            preparedStatement.addBatch();
+        }
+
+        preparedStatement.executeBatch();
+    }
+
+
+
 }

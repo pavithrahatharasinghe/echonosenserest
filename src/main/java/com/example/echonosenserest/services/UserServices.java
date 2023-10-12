@@ -201,6 +201,59 @@ public class UserServices {
         }
     }
 
+    // Update user's first name, last name, and email
+    @PUT
+    @Path("/{id}/details")
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response updateUserDetails(
+            @PathParam("id") int userId,
+            UserDetailsUpdateRequest updateRequest
+    ) {
+        try {
+            boolean updated = UserDBUtils.updateUserDetails(userId, updateRequest.getFirstName(), updateRequest.getLastName(), updateRequest.getEmail());
+
+            if (updated) {
+                return Response.ok().entity("User details updated successfully").build();
+            } else {
+                return Response.status(Response.Status.BAD_REQUEST).entity("Error updating user details").build();
+            }
+        } catch (SQLException e) {
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("Server error").build();
+        }
+    }
+
+    // Create a class to represent the user's details update request
+    public static class UserDetailsUpdateRequest {
+        private String firstName;
+        private String lastName;
+        private String email;
+
+        public String getFirstName() {
+            return firstName;
+        }
+
+        public void setFirstName(String firstName) {
+            this.firstName = firstName;
+        }
+
+        public String getLastName() {
+            return lastName;
+        }
+
+        public void setLastName(String lastName) {
+            this.lastName = lastName;
+        }
+
+        public String getEmail() {
+            return email;
+        }
+
+        public void setEmail(String email) {
+            this.email = email;
+        }
+    }
+
+
 
 
 

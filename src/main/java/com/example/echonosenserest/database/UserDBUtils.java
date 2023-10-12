@@ -183,6 +183,17 @@ public class UserDBUtils {
         return null;
     }
 
+    // Update user's first name, last name, and email
+    public static boolean updateUserDetails(int userId, String newFirstName, String newLastName, String newEmail) throws SQLException {
+        PreparedStatement statement = connection.prepareStatement("UPDATE Users SET firstName = ?, lastName = ?, Email = ? WHERE UserID = ?");
+        statement.setString(1, newFirstName);
+        statement.setString(2, newLastName);
+        statement.setString(3, newEmail);
+        statement.setInt(4, userId);
+        return statement.executeUpdate() > 0;
+    }
+
+
 
 
 }
