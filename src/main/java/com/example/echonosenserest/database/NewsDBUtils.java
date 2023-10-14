@@ -37,7 +37,8 @@ public class NewsDBUtils {
                     resultSet.getString("impact"),
                     resultSet.getString("relatedCoin"),
                     resultSet.getString("dateReleased"),
-                    resultSet.getString("source")
+                    resultSet.getString("source"),
+                    resultSet.getString("image_url")
             );
             newsList.add(news);
         }
@@ -58,7 +59,8 @@ public class NewsDBUtils {
                     resultSet.getString("impact"),
                     resultSet.getString("relatedCoin"),
                     resultSet.getString("dateReleased"),
-                    resultSet.getString("source")
+                    resultSet.getString("source"),
+                    resultSet.getString("image_url")
             );
             newsList.add(news);
         }
@@ -79,7 +81,8 @@ public class NewsDBUtils {
                     resultSet.getString("impact"),
                     resultSet.getString("relatedCoin"),
                     resultSet.getString("dateReleased"),
-                    resultSet.getString("source")
+                    resultSet.getString("source"),
+                    resultSet.getString("image_url")
             );
             newsList.add(news);
         }
@@ -103,7 +106,8 @@ public class NewsDBUtils {
                     resultSet.getString("impact"),
                     resultSet.getString("ticker"),
                     resultSet.getString("published_utc"),
-                    resultSet.getString("article_url")
+                    resultSet.getString("article_url"),
+                    resultSet.getString("image_url")
 
             );
             newsList.add(news);

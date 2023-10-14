@@ -39,6 +39,26 @@ public class CoinDBUtils {
         }
         return coins;
     }
+    // Add a method to insert a new coin into the database
+    public static boolean insertCoin(Coin coin) {
+        String insertQuery = "INSERT INTO coins (name, symbol, description, status, imageUrl) VALUES (?, ?, ?, ?, ?)";
 
+        try {
+            PreparedStatement preparedStatement = connection.prepareStatement(insertQuery);
+            preparedStatement.setString(1, coin.getName());
+            preparedStatement.setString(2, coin.getSymbol());
+            preparedStatement.setString(3, coin.getDescription());
+            preparedStatement.setString(4, coin.getStatus());
+            preparedStatement.setString(5, coin.getImageUrl());
+
+            int rowsAffected = preparedStatement.executeUpdate();
+
+            // Check if the insertion was successful
+            return rowsAffected > 0;
+        } catch (SQLException e) {
+            e.printStackTrace(); // Handle the exception properly in your application
+            return false;
+        }
+    }
     // Add other methods for adding, updating, and deleting coins as needed
 }

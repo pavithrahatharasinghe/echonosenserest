@@ -12,9 +12,12 @@ public class News {
     private String dateReleased;
     private String source;
 
+    private String imageUrl;
+
     // Constructors, getters, setters, and other methods...
 
-    public News(String newsID, String title, String content, double polarity, String impact, String relatedCoin, String dateReleased, String source) {
+
+    public News(String newsID, String title, String content, double polarity, String impact, String relatedCoin, String dateReleased, String source, String imageUrl) {
         this.newsID = newsID;
         this.title = title;
         this.content = content;
@@ -23,6 +26,7 @@ public class News {
         this.relatedCoin = relatedCoin;
         this.dateReleased = dateReleased;
         this.source = source;
+        this.imageUrl = imageUrl;
     }
 
     public String getNewsID() {
@@ -87,5 +91,17 @@ public class News {
 
     public void setSource(String source) {
         this.source = source;
+    }
+
+    public void setDateReleased(String dateReleased) {
+        this.dateReleased = dateReleased;
+    }
+
+    public String getImageUrl() {
+        return imageUrl;
+    }
+
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
     }
 }
