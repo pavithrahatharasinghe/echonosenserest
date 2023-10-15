@@ -26,7 +26,7 @@ public class ContextListener implements ServletContextListener {
             } catch (Exception e) {
                 e.printStackTrace();
             }
-        }, 0, 15, TimeUnit.MINUTES);
+        }, 0, 1, TimeUnit.MINUTES);
 
         // Schedule NewsFetcher to run every 15 minutes (or adjust as needed)
         scheduler.scheduleAtFixedRate(() -> {
@@ -35,7 +35,7 @@ public class ContextListener implements ServletContextListener {
             } catch (Exception e) {
                 e.printStackTrace();
             }
-        }, 0, 15, TimeUnit.MINUTES);
+        }, 0, 1, TimeUnit.MINUTES);
     }
 
     @Override
