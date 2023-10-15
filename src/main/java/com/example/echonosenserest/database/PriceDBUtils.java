@@ -39,7 +39,7 @@ public class PriceDBUtils {
     }
 
     public static Price getPriceBySymbol(String symbol) throws SQLException {
-        PreparedStatement statement = connection.prepareStatement("SELECT * FROM prices WHERE symbol = ?");
+        PreparedStatement statement = connection.prepareStatement("SELECT * FROM prices WHERE symbol = ? ORDER BY fetch_time DESC LIMIT 10");
         statement.setString(1, symbol);
         ResultSet resultSet = statement.executeQuery();
         if (resultSet.next()) {

@@ -72,19 +72,18 @@ public class UserDBUtils {
         statement.setString(3, user.getEmail());
         statement.setString(4, user.getPassword());
         statement.setString(5, user.getRole());
-        statement.setString(6, "Active");
+        statement.setString(6, "active");
         return statement.executeUpdate() > 0;
     }
 
     // Update user
     public static boolean updateUser(User user) throws SQLException {
-        PreparedStatement statement = connection.prepareStatement("UPDATE Users SET firstName = ? , lastName = ?, Email = ?, Password = ?, Role = ? WHERE UserID = ?");
+        PreparedStatement statement = connection.prepareStatement("UPDATE Users SET firstName = ? , lastName = ?, Email = ? WHERE UserID = ?");
         statement.setString(1, user.getFname());
         statement.setString(2, user.getlName());
         statement.setString(3, user.getEmail());
-        statement.setString(4, user.getPassword());
-        statement.setString(5, user.getRole());
-        statement.setInt(6, user.getUserId());
+
+        statement.setInt(4, user.getUserId());
         return statement.executeUpdate() > 0;
     }
 
