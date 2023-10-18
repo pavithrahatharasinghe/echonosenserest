@@ -27,6 +27,9 @@ public class Coin {
         this.imageUrl = imageUrl;
     }
 
+    public Coin(String testCoin, String tst, String testCoinDescription, String active, String image) {
+    }
+
     public int getId() {
         return id;
     }

@@ -17,6 +17,9 @@ public class Subscription {
         this.price = price;
     }
 
+    public Subscription(String premiumPlan, String s, BigDecimal bigDecimal) {
+    }
+
     public int getSubscriptionID() {
         return subscriptionID;
     }
