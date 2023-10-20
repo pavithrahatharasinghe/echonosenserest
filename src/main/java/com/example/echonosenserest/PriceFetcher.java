@@ -3,8 +3,7 @@ package com.example.echonosenserest;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.sql.Connection;
@@ -13,17 +12,40 @@ import java.sql.PreparedStatement;
 import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Properties;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
 public class PriceFetcher {
 
-    private static final String API_URL = "https://api.binance.com/api/v3/ticker/price";
-    private static final String DB_URL = "jdbc:mysql://localhost:3306/echonosense";
-    private static final String DB_USER = "root";
-    private static final String DB_PASSWORD = "123456";
-    private static final List<String> SELECTED_COINS = Arrays.asList("BTCUSDT", "ETHUSDT", "LTCUSDT");
+    private String API_URL;
+    private String DB_URL;
+    private String DB_USER;
+    private String DB_PASSWORD;
+    private List<String> SELECTED_COINS;
+
+    public PriceFetcher() {
+        // Load configuration properties
+        loadConfiguration();
+    }
+
+    private void loadConfiguration() {
+        try (InputStream input = PriceFetcher.class.getResourceAsStream("/config.properties")) {
+            Properties properties = new Properties();
+            properties.load(input);
+            API_URL = properties.getProperty("api.prices");
+            DB_URL = properties.getProperty("db.url");
+            DB_USER = properties.getProperty("db.user");
+            DB_PASSWORD = properties.getProperty("db.password");
+
+            // Load the list of selected coins as a comma-separated string and convert to a list
+            String selectedCoinsString = properties.getProperty("selected.coins");
+            SELECTED_COINS = Arrays.asList(selectedCoinsString.split(","));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 
     public void fetchPricesAndInsert() throws Exception {
         URL url = new URL(API_URL);
@@ -55,6 +77,8 @@ public class PriceFetcher {
                     statement.setString(2, price.optString("price", "0"));
                     statement.setObject(3, fetchTime);
                     statement.addBatch();
+
+                    System.out.println(symbol);
                 }
             }
 
@@ -73,6 +97,6 @@ public class PriceFetcher {
             } catch (Exception e) {
                 e.printStackTrace();
             }
-        }, 0, 1, TimeUnit.MINUTES);
+        }, 0, 15, TimeUnit.SECONDS);
     }
 }

@@ -3,30 +3,98 @@ package com.example.echonosenserest;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
+import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZoneOffset;
+import java.util.List;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
+
+import java.io.FileInputStream;
+import java.util.Properties;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class NewsFetcher {
 
-    private static final String API_URL = "https://api.polygon.io/v2/reference/news?ticker=LTC&published_utc,gt=2022-10-11T13:10:00Z&order=desc&limit=100&apiKey=OTQk8uULaAD0AKpHU_8BPhMg40Dp8Voh";
-    private static final String DB_URL = "jdbc:mysql://localhost:3306/echonosense";
-    private static final String DB_USER = "root";
-    private static final String DB_PASSWORD = "123456";
+    // Define configuration properties
+    private String API_URL;
+    private String APIKEY;
+    private String DB_URL;
+    private String DB_USER;
+    private String DB_PASSWORD;
+    private String SENTIMENT_API_URL;
+    private List<String> tickers;
+    private static final Logger LOGGER = Logger.getLogger(NewsFetcher.class.getName());
 
-    // Add the URL of the sentiment prediction API
-    private static final String SENTIMENT_API_URL = "http://127.0.0.1:5000/predict_sentiment";
+    public NewsFetcher() {
+        // Load configuration properties
+        loadConfiguration();
+        loadQuerry();
+    }
+
+    private void loadConfiguration() {
+        try (InputStream input = NewsFetcher.class.getResourceAsStream("/config.properties")) {
+            Properties properties = new Properties();
+            properties.load(input);
+            API_URL = properties.getProperty("api.host");
+            // Load the list of tickers as a comma-separated string and convert to a list
+            String tickersString = properties.getProperty("tickers");
+            tickers = List.of(tickersString.split(","));
+            // Load other configuration properties
+            DB_URL = properties.getProperty("db.url");
+            DB_USER = properties.getProperty("db.user");
+            DB_PASSWORD = properties.getProperty("db.password");
+            SENTIMENT_API_URL = properties.getProperty("sentiment.api.url");
+        } catch (IOException e) {
+            LOGGER.log(Level.SEVERE, "Error loading configuration", e);
+        }
+    }
+
+    private void loadQuerry() {
+        try (InputStream input = NewsFetcher.class.getResourceAsStream("/query.properties")) {
+            Properties properties = new Properties();
+            properties.load(input);
+
+
+            // Load other configuration properties
+           // ORDER = properties.getProperty("order");
+            //LIMIT = properties.getProperty("limit");
+            APIKEY = properties.getProperty("apiKey");
+
+        } catch (IOException e) {
+            LOGGER.log(Level.SEVERE, "Error loading configuration", e);
+        }
+    }
+
+    private String buildDynamicApiUrl() {
+        LocalDateTime oneHourAgo = LocalDateTime.now(ZoneId.of("UTC")).minusHours(1);
+        LocalDateTime now = LocalDateTime.now(ZoneId.of("UTC"));
+
+        String oneHourAgoUtc = oneHourAgo.atZone(ZoneOffset.UTC).toInstant().toString();
+        String nowUtc = now.atZone(ZoneOffset.UTC).toInstant().toString();
+
+
+
+        // Build the API URL with the dynamic values
+        return String.format("%s?published_utc.gt=%s&published_utc.lt=%s&apiKey=%s",
+                API_URL, oneHourAgoUtc, nowUtc,APIKEY);
+    }
 
     public void fetchNewsAndInsert() throws Exception {
-        URL url = new URL(API_URL);
+        String dynamicApiUrl = buildDynamicApiUrl();
+
+        System.out.println(dynamicApiUrl);
+
+        URL url = new URL(dynamicApiUrl);
         HttpURLConnection conn = (HttpURLConnection) url.openConnection();
         conn.setRequestMethod("GET");
 
@@ -48,29 +116,32 @@ public class NewsFetcher {
 
             for (int i = 0; i < newsArray.length(); i++) {
                 JSONObject news = newsArray.getJSONObject(i);
-                statement.setString(1, news.optString("id", "N/A"));
-                statement.setString(2, "LTC");
-                statement.setString(3, news.optString("title", "N/A"));
-                statement.setString(4, news.optString("author", "N/A"));
-                statement.setString(5, news.optString("published_utc", "N/A"));
-                statement.setString(6, news.optString("article_url", "N/A"));
-                statement.setString(7, news.optString("image_url", "N/A"));
-                statement.setString(8, news.optString("description", "No description available"));
+                List<String> newsTickers = news.getJSONArray("tickers").toList().stream().map(Object::toString).collect(Collectors.toList());
 
-                // Get sentiment prediction from the API
-                JSONObject sentimentResponse = fetchSentimentPrediction(news.optString("title") + " " + news.optString("description"));
-                statement.setString(9, sentimentResponse.optString("polarity", "0"));
-                statement.setString(10, sentimentResponse.optString("sentiment_class", "not-set"));
+                // Check if the news contains any of the selected tickers
+                if (newsTickers.stream().anyMatch(tickers::contains)) {
+                    statement.setString(1, news.optString("id", "N/A"));
+                    statement.setString(2, newsTickers.get(0)); // Assuming the first ticker is the primary one
+                    statement.setString(3, news.optString("title", "N/A"));
+                    statement.setString(4, news.optString("author", "N/A"));
+                    statement.setString(5, news.optString("published_utc", "N/A"));
+                    statement.setString(6, news.optString("article_url", "N/A"));
+                    statement.setString(7, news.optString("image_url", "N/A"));
+                    statement.setString(8, news.optString("description", "No description available"));
 
-                statement.addBatch();
+                    // Get sentiment prediction from the API
+                    JSONObject sentimentResponse = fetchSentimentPrediction(news.optString("title") + " " + news.optString("description"));
+                    statement.setString(9, sentimentResponse.optString("polarity", "0"));
+                    statement.setString(10, sentimentResponse.optString("sentiment_class", "not-set"));
+
+                    statement.addBatch();
+                }
             }
 
             statement.executeBatch();
         }
     }
 
-    // Method to fetch sentiment prediction
-    // Method to fetch sentiment prediction
     private JSONObject fetchSentimentPrediction(String description) throws Exception {
         URL url = new URL(SENTIMENT_API_URL);
         HttpURLConnection conn = (HttpURLConnection) url.openConnection();
@@ -82,7 +153,6 @@ public class NewsFetcher {
         payloadJson.put("text", description);
         String payload = payloadJson.toString();
 
-        System.out.println(payload);
         conn.setRequestProperty("Content-Type", "application/json");
 
         // Write the payload to the request output stream
@@ -103,19 +173,17 @@ public class NewsFetcher {
         return new JSONObject(response.toString());
     }
 
-
-
     public static void main(String[] args) {
         NewsFetcher fetcher = new NewsFetcher();
         ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
 
-        // Schedule the task to run every 1 minute
+        // Schedule the task to run every 1 hour
         scheduler.scheduleAtFixedRate(() -> {
             try {
                 fetcher.fetchNewsAndInsert();
             } catch (Exception e) {
                 e.printStackTrace();
             }
-        }, 0, 1, TimeUnit.MINUTES);
+        }, 0, 1, TimeUnit.HOURS   );
     }
 }
