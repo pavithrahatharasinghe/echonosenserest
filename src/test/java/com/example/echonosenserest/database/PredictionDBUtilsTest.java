@@ -21,17 +21,7 @@ class PredictionDBUtilsTest {
         }
     }
 
-    @Test
-    void getPredictionById() {
-        try {
-            int predictionId = 1; // Replace with an existing prediction ID
-            Predictions prediction = PredictionDBUtils.getPredictionById(predictionId);
-            assertNotNull(prediction); // Ensure that the retrieved prediction is not null
-            // Add more specific assertions as needed
-        } catch (SQLException e) {
-            fail("Exception thrown while retrieving prediction by ID: " + e.getMessage());
-        }
-    }
+
 
     @Test
     void getPredictionBySymbol() {

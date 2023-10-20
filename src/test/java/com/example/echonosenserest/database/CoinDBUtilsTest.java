@@ -24,7 +24,7 @@ class CoinDBUtilsTest {
     @Test
     void insertCoin() {
         // Create a sample Coin object for insertion
-        Coin coin = new Coin( "TestCoin", "TST", "Test coin description", "Active", "testcoin.png");
+        Coin coin = new Coin( 0,"TestCoins", "TSTs", "Test coin description", "Active", "testcoin.png");
 
         boolean isInserted = CoinDBUtils.insertCoin(coin);
         assertTrue(isInserted); // Ensure that the coin was successfully inserted

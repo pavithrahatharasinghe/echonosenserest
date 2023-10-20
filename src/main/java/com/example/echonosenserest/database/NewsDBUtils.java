@@ -43,27 +43,6 @@ public class NewsDBUtils {
         return newsList;
     }
 
-    public static List<News> getNewsByCoin(String relatedCoin) throws SQLException {
-        List<News> newsList = new ArrayList<>();
-        PreparedStatement statement = connection.prepareStatement("SELECT * FROM News WHERE relatedCoin = ?");
-        statement.setString(1, relatedCoin);
-        ResultSet resultSet = statement.executeQuery();
-        while (resultSet.next()) {
-            News news = new News(
-                    resultSet.getString("id"),
-                    resultSet.getString("title"),
-                    resultSet.getString("description"),
-                    resultSet.getDouble("polarity"),
-                    resultSet.getString("impact"),
-                    resultSet.getString("ticker"),
-                    resultSet.getString("published_utc"),
-                    resultSet.getString("article_url"),
-                    resultSet.getString("image_url")
-            );
-            newsList.add(news);
-        }
-        return newsList;
-    }
 
     public static List<News> getNewsByImpact(String impact) throws SQLException {
         List<News> newsList = new ArrayList<>();

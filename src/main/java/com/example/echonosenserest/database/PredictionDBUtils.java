@@ -37,22 +37,7 @@ public class PredictionDBUtils {
         return predictionList;
     }
 
-    public static Predictions getPredictionById(int id) throws SQLException {
-        PreparedStatement statement = connection.prepareStatement("SELECT * FROM coin_predictions WHERE CoinId = ?");
-        statement.setInt(1, id);
-        ResultSet resultSet = statement.executeQuery();
 
-        if (resultSet.next()) {
-            return new Predictions(
-                    resultSet.getInt("ID"),
-                    resultSet.getString("CoinId"),
-                    resultSet.getDouble("Predicted_Close"),
-                    resultSet.getString("Prediction_Date")
-            );
-        }
-
-        return null; // Return null if the prediction with the specified ID doesn't exist.
-    }
 
     public static Predictions getPredictionBySymbol(String CoinId) throws SQLException {
         PreparedStatement statement = connection.prepareStatement("SELECT * FROM predictions WHERE CoinId = ? ORDER BY Prediction_Date DESC LIMIT 1");

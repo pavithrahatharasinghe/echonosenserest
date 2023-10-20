@@ -48,7 +48,7 @@ class PaymentDBUtilsTest {
     @Test
     void getPaymentByID() {
         try {
-            int paymentID = 1; // Replace with an existing payment ID
+            int paymentID =5; // Replace with an existing payment ID
             Payment payment = PaymentDBUtils.getPaymentByID(paymentID);
             assertNotNull(payment); // Ensure that the retrieved payment is not null
             // Add more specific assertions as needed
@@ -62,7 +62,7 @@ class PaymentDBUtilsTest {
         try {
             // Create a sample Payment object for updating
             Payment payment = new Payment(
-                    1, // Replace with an existing payment ID
+                    5, // Replace with an existing payment ID
                     1, // Replace with an existing user ID
                     new BigDecimal("110.00"),
                     new Date(),
@@ -83,7 +83,7 @@ class PaymentDBUtilsTest {
     @Test
     void deletePayment() {
         try {
-            int paymentID = 1; // Replace with an existing payment ID
+            int paymentID = 6; // Replace with an existing payment ID
             boolean isDeleted = PaymentDBUtils.deletePayment(paymentID);
             assertTrue(isDeleted); // Ensure that the payment was successfully deleted
             // Add more specific assertions as needed

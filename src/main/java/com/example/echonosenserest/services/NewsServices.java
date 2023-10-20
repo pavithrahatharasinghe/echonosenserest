@@ -19,13 +19,7 @@
             return Response.ok(newsList).build();
         }
 
-        @GET
-        @Path("/coin/{relatedCoin}")
-        @Produces(MediaType.APPLICATION_JSON)
-        public Response getNewsByCoin(@PathParam("relatedCoin") String relatedCoin) throws SQLException {
-            List<News> newsList = NewsDBUtils.getNewsByCoin(relatedCoin);
-            return Response.ok(newsList).build();
-        }
+
 
         @GET
         @Path("/impact/{impact}")

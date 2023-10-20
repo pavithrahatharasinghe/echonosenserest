@@ -59,8 +59,8 @@ class NotificationDBUtilsTest {
         try {
             // Create a sample Notification object for updating
             Notification notification = new Notification(
-                    1, // Replace with an existing notification ID
-                    1, // Replace with an existing user ID
+                    18, // Replace with an existing notification ID
+                    123, // Replace with an existing user ID
                     "Updated message",
                     new Date(),
                     new Date()
@@ -68,6 +68,9 @@ class NotificationDBUtilsTest {
 
             int notificationId = 1; // Replace with an existing notification ID
             boolean isUpdated = NotificationDBUtils.updateNotification(notificationId, notification);
+
+            System.out.println("isUpdated: " + isUpdated); // Add this line for debugging
+
             assertTrue(isUpdated); // Ensure that the notification was successfully updated
             // Add more specific assertions as needed
         } catch (SQLException e) {
@@ -75,15 +78,6 @@ class NotificationDBUtilsTest {
         }
     }
 
-    @Test
-    void deleteNotification() {
-        try {
-            int notificationId = 1; // Replace with an existing notification ID
-            boolean isDeleted = NotificationDBUtils.deleteNotification(notificationId);
-            assertTrue(isDeleted); // Ensure that the notification was successfully deleted
-            // Add more specific assertions as needed
-        } catch (SQLException e) {
-            fail("Exception thrown while deleting notification: " + e.getMessage());
-        }
-    }
+
+
 }

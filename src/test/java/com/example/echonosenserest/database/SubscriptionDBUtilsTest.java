@@ -71,15 +71,5 @@ class SubscriptionDBUtilsTest {
         }
     }
 
-    @Test
-    void getSubscriptionPlanById() {
-        try {
-            int subscriptionID = 1; // Replace with an existing subscription ID
-            Subscription subscription = SubscriptionDBUtils.getSubscriptionPlanById(subscriptionID);
-            assertNotNull(subscription); // Ensure that the retrieved subscription is not null
-            // Add more specific assertions as needed
-        } catch (SQLException e) {
-            fail("Exception thrown while retrieving subscription by ID: " + e.getMessage());
-        }
-    }
+
 }

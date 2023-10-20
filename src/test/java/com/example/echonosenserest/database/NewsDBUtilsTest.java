@@ -23,17 +23,7 @@ class NewsDBUtilsTest {
         }
     }
 
-    @Test
-    void getNewsByCoin() {
-        try {
-            String coinSymbol = "LTC"; // Replace with an existing coin symbol
-            List<News> newsList = NewsDBUtils.getNewsByCoin(coinSymbol);
-            assertNotNull(newsList); // Ensure that the list is not null
-            // Add more specific assertions as needed
-        } catch (SQLException e) {
-            fail("Exception thrown while retrieving news by coin: " + e.getMessage());
-        }
-    }
+
 
     @Test
     void getNewsByImpact() {

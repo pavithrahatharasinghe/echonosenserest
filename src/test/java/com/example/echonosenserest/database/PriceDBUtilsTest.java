@@ -24,7 +24,7 @@ class PriceDBUtilsTest {
     @Test
     void getPriceBySymbol() {
         try {
-            String symbol = "BTC"; // Replace with an existing symbol
+            String symbol = "BTCUSDT"; // Replace with an existing symbol
             Price price = PriceDBUtils.getPriceBySymbol(symbol);
             assertNotNull(price); // Ensure that the retrieved price is not null
             // Add more specific assertions as needed
